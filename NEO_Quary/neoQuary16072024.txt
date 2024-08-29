@@ -1,0 +1,496 @@
+
+  
+  
+  
+   
+alter PROCEDURE SP_InsertNEOMatrixLimitLogs         
+@Collateral DECIMAL(18, 2),         
+@ExposureMarginPrsnt DECIMAL(18, 2),         
+@MarginScripBasketPrsnt DECIMAL(18, 2),         
+@SpanMarginPrsnt DECIMAL(18, 2),         
+@PremiumPrsnt DECIMAL(18, 2),    
+@MarginUsed DECIMAL(18, 2),    
+@CollateralValue DECIMAL(18, 2),    
+@AdhocMargin DECIMAL(18, 2),    
+@NotionalCash DECIMAL(18, 2),    
+@RmsCollateral DECIMAL(18, 2),    
+@RmsPayInAmt DECIMAL(18, 2),    
+@RmsPayOutAmt DECIMAL(18, 2),    
+@TotalMargin DECIMAL(18, 2),    
+@NetMargin DECIMAL(18, 2),    
+@clientCode VARCHAR(100),    
+@serverType VARCHAR(100),  
+@prodType VARCHAR(50),
+@CncSellcrdPresent VARCHAR(50)
+    
+AS     
+BEGIN         
+INSERT INTO NEO_MATRIX_LIMIT_Logs (Collateral, ExposureMarginPrsnt, MarginScripBasketPrsnt, SpanMarginPrsnt, PremiumPrsnt, MarginUsed, CollateralValue, AdhocMargin, NotionalCash, RmsCollateral, RmsPayInAmt, RmsPayOutAmt, TotalMargin, NetMargin, clientCode, serverType, prodType, DateTimeStamp, CncSellcrdPresent)     
+VALUES (@Collateral, @ExposureMarginPrsnt, @MarginScripBasketPrsnt, @SpanMarginPrsnt, @PremiumPrsnt, @MarginUsed, @CollateralValue,  @AdhocMargin,  @NotionalCash, @RmsCollateral, @RmsPayInAmt, @RmsPayOutAmt, @TotalMargin, @NetMargin,@clientCode, @serverType, @prodType, CONVERT(varchar(19), GETDATE(), 120), @CncSellcrdPresent);     
+END  
+
+--------------------------
+
+ALTER TABLE NEO_MATRIX_LIMIT_Logs
+ADD CncSellcrdPresent VARCHAR(50)
+
+***************************before 26082024 **************
+
+alter PROCEDURE SP_InsertNEOMatrixLimitLogs       
+@Collateral DECIMAL(18, 2),       
+@ExposureMarginPrsnt DECIMAL(18, 2),       
+@MarginScripBasketPrsnt DECIMAL(18, 2),       
+@SpanMarginPrsnt DECIMAL(18, 2),       
+@PremiumPrsnt DECIMAL(18, 2),  
+@MarginUsed DECIMAL(18, 2),  
+@CollateralValue DECIMAL(18, 2),  
+@AdhocMargin DECIMAL(18, 2),  
+@NotionalCash DECIMAL(18, 2),  
+@RmsCollateral DECIMAL(18, 2),  
+@RmsPayInAmt DECIMAL(18, 2),  
+@RmsPayOutAmt DECIMAL(18, 2),  
+@TotalMargin DECIMAL(18, 2),  
+@NetMargin DECIMAL(18, 2),  
+@clientCode VARCHAR(100),  
+@serverType VARCHAR(100),
+@prodType VARCHAR(50)
+  
+AS   
+BEGIN       
+INSERT INTO NEO_MATRIX_LIMIT_Logs (Collateral, ExposureMarginPrsnt, MarginScripBasketPrsnt, SpanMarginPrsnt, PremiumPrsnt, MarginUsed, CollateralValue, AdhocMargin, NotionalCash, RmsCollateral, RmsPayInAmt, RmsPayOutAmt, TotalMargin, NetMargin, clientCode, serverType, prodType, DateTimeStamp)   
+VALUES (@Collateral, @ExposureMarginPrsnt, @MarginScripBasketPrsnt, @SpanMarginPrsnt, @PremiumPrsnt, @MarginUsed, @CollateralValue,  @AdhocMargin,  @NotionalCash, @RmsCollateral, @RmsPayInAmt, @RmsPayOutAmt, @TotalMargin, @NetMargin,@clientCode, @serverType, @prodType, CONVERT(varchar(19), GETDATE(), 120));   
+END
+
+
+-----------------------
+
+CREATE TABLE NEO_MATRIX_LIMIT_Logs(
+SrNo INT IDENTITY(1,1),
+clientCode VARCHAR(50),
+serverType VARCHAR(50),
+prodType VARCHAR(50),
+Collateral DECIMAL(18,2),
+ExposureMarginPrsnt DECIMAL(18,2),
+MarginScripBasketPrsnt DECIMAL(18,2),
+SpanMarginPrsnt DECIMAL(18,2),
+PremiumPrsnt DECIMAL(18,2),
+MarginUsed DECIMAL(18,2),
+CollateralValue DECIMAL(18,2),
+AdhocMargin DECIMAL(18,2),
+NotionalCash DECIMAL(18,2),
+RmsCollateral DECIMAL(18,2),
+RmsPayInAmt DECIMAL(18,2),
+RmsPayOutAmt DECIMAL(18,2),
+TotalMargin DECIMAL(18,2),
+NetMargin DECIMAL(18,2),
+DateTimeStamp DATETIME
+)
+
+***************************before 22.08.24************
+
+-------------------
+
+ALTER TABLE NEO_MatrixLimit_option
+ADD prodType VARCHAR(50)
+-----------
+
+alter PROCEDURE SP_GetClientServerTypeForLimit
+    @prodType VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT DISTINCT clientCode, serverType 
+    FROM NEO_MatrixLimit_option (NOLOCK)
+    WHERE prodType = @prodType
+
+    SET NOCOUNT OFF;
+END
+
+***************************before 20.08.24****************
+
+ALTER TABLE NEOAPI_CREDENTIALS
+ADD UserLoginURL VARCHAR(200)
+
+ALTER TABLE NEOAPI_CREDENTIALS
+ADD UserLogOutURL VARCHAR(200)
+
+update NEOAPI_CREDENTIALS set UserLoginURL='https://d-mis.kotaksecurities.com/adauth/1.0/login'
+
+update NEOAPI_CREDENTIALS set UserLogOutURL='https://d-mis.kotaksecurities.com/adauth/1.0/logout'
+
+update NEOAPI_CREDENTIALS set UserLoginURL='https://d-cis.kotaksecurities.com/adauth/1.0/login' where SrNo=3
+
+update NEOAPI_CREDENTIALS set UserLogOutURL='https://d-cis.kotaksecurities.com/adauth/1.0/logout' where SrNo=3
+
+
+************************** before 12.08.24 ************************
+
+create table NEO_MatrixLimit_option (
+SrNo int IDENTITY(1,1),
+isActive INT,
+SegTypeML VARCHAR(100),
+ProdTypeML VARCHAR(100),
+ExchTypeML VARCHAR(100),
+serverType VARCHAR(100),
+clientCode VARCHAR(100)
+)
+
+INSERT INTO NEO_MatrixLimit_option (isActive,SegTypeML,ProdTypeML,ExchTypeML,serverType,clientCode)
+VALUES (1,'ALL','ALL','ALL','GDC','YYOK2')
+
+------------------------------------
+
+CREATE PROCEDURE SP_GetClientServerTypeForLimit   
+AS   
+BEGIN   
+set nocount on
+SELECT distinct clientCode,serverType FROM NEO_MatrixLimit_option (nolock)
+set nocount off
+END 
+
+*************************before 09.08.24*****************************
+
+alter procedure SP_GetClientCodeServerType  
+AS  
+BEGIN  
+select distinct clientCode, nod.serverType,nc.userId userId,nc.CancelOrderURL CancelOrderURL from NEO_OrderData nod(nolock)
+left join NEOAPI_CREDENTIALS nc (nolock) on nod.serverType=nc.serverType
+END
+
+**************************
+
+alter PROCEDURE proc_saveCancelALLOrderAPIRes(          
+@clientCode VARCHAR(50),        
+@userId VARCHAR(50),   
+@statusRes VARCHAR(50),            
+@orderNumber1 VARCHAR(50),            
+@internalOrderNumber VARCHAR(100),            
+@orderNumber2 VARCHAR(50),     
+@userIdRes VARCHAR(50),    
+@messageRes VARCHAR(MAX),    
+@stat VARCHAR(50),
+@serverType VARCHAR(50),
+@segment Varchar(50)
+)            
+AS            
+SET NOCOUNT ON 
+
+ INSERT INTO NEOAPI_CancelAllOrderLog (Tag, clientCode, userId,statusRes,orderNumber1,internalOrderNumber,orderNumber2,userIdRes,messageRes,stat, serverType, segment, DateTimeStamp)                
+    VALUES ('CANCEL ALL ORDER', @clientCode, @userId,@statusRes,@orderNumber1, @internalOrderNumber, @orderNumber2,@userIdRes, @messageRes, @stat, @serverType, @segment, GETDATE());
+
+ --UPDATE NEOAPI_CancelAllOrderLog SET statusRes = @statusRes, orderNumber1 = @orderNumber1, internalOrderNumber = @internalOrderNumber, orderNumber2 = @orderNumber2, userIdRes=@userIdRes,          
+-- messageRes = @messageRes, stat=@stat WHERE clientCode = @clientCode AND userId = @userId  
+
+ select 1 status            
+SET NOCOUNT OFF 
+
+             
+
+
+****************************Before 07.08.2024*****************************
+
+create procedure SP_GetClientCodeServerType
+AS
+BEGIN
+select distinct clientCode, serverType from NEO_OrderData nolock
+END
+
+---------------------------------------------
+
+alter PROCEDURE proc_saveCancelALLOrderReqLogs (              
+    @clientCode VARCHAR(30),              
+    @userId VARCHAR(30),         
+    @segment VARCHAR(50),
+	@serverType VARCHAR(50)
+          
+)                 
+AS              
+BEGIN              
+    SET NOCOUNT ON;              
+                  
+    INSERT INTO NEOAPI_CancelAllOrderLog (Tag, clientCode, userId, segment, serverType, DateTimeStamp)              
+    VALUES ('CANCEL ALL ORDER', @clientCode, @userId, @segment,@serverType, GETDATE());                    
+    SET NOCOUNT OFF;              
+END
+
+************************Before 05/08/24**************************
+-----------------------------------------
+
+create table NEO_SegForCancellALL_Option (
+SrNo int IDENTITY(1,1),
+isActive INT,
+SegTypeCancelAll VARCHAR(100)
+)
+
+INSERT INTO NEO_SegForCancellALL_Option (isActive,SegTypeCancelAll)
+VALUES (1, 'ALL')
+INSERT INTO NEO_SegForCancellALL_Option (isActive,SegTypeCancelAll)
+VALUES (1, 'CM')
+INSERT INTO NEO_SegForCancellALL_Option (isActive,SegTypeCancelAll)
+VALUES (1, 'FO')
+INSERT INTO NEO_SegForCancellALL_Option (isActive,SegTypeCancelAll)
+VALUES (1, 'CD')
+
+----------------------------------------
+CREATE PROCEDURE SP_GetSegTypeCancelAll 
+AS 
+BEGIN     
+SELECT SegTypeCancelAll FROM NEO_SegForCancellALL_Option; 
+END
+
+-----------------------------
+
+************************************
+-------------------------
+
+create table NEO_MatrixLimit_option (
+SrNo int IDENTITY(1,1),
+isActive INT,
+SegTypeML VARCHAR(100),
+ProdTypeML VARCHAR(100),
+ExchTypeML VARCHAR(100)
+)
+INSERT INTO NEO_MatrixLimit_option (isActive,SegTypeML,ProdTypeML,ExchTypeML)
+VALUES (1, 'ALL','ALL','ALL')
+-----------------------------
+
+CREATE PROCEDURE SP_GetSegTypeML 
+AS 
+BEGIN     
+SELECT SegTypeML FROM NEO_MatrixLimit_option; 
+END
+
+----------------------------
+
+CREATE PROCEDURE SP_GetExchTypeML 
+AS 
+BEGIN     
+SELECT ExchTypeML FROM NEO_MatrixLimit_option; 
+END
+
+----------------------------
+
+CREATE PROCEDURE SP_GetProdTypeML 
+AS 
+BEGIN     
+SELECT ProdTypeML FROM NEO_MatrixLimit_option; 
+END
+
+----------------------------
+
+
+
+**********************************************
+
+create PROCEDURE GetUserIdAndUrlForMatrixLimitURL
+    @ServerType VARCHAR(50)
+AS
+BEGIN
+    SELECT userId, MatrixLimitURL
+    FROM NEOAPI_CREDENTIALS nolock
+    WHERE serverType = @ServerType;
+END
+
+
+***********************************************
+
+CREATE PROCEDURE GetUserIdAndUrlForCancelALL
+    @ServerType VARCHAR(50)
+AS
+BEGIN
+    SELECT userId, CancelOrderURL
+    FROM NEOAPI_CREDENTIALS
+    WHERE serverType = @ServerType;
+END
+
+
+***************************xxxxxx*********************
+---------------/before 01.08/---------------------
+
+create PROCEDURE proc_saveCancelALLOrderAPIRes(        
+@clientCode VARCHAR(50),      
+@userId VARCHAR(50), 
+@statusRes VARCHAR(50),          
+@orderNumber1 VARCHAR(50),          
+@internalOrderNumber VARCHAR(100),          
+@orderNumber2 VARCHAR(50),   
+@userIdRes VARCHAR(50),  
+@messageRes VARCHAR(MAX),  
+@stat VARCHAR(50)  
+)          
+AS          
+SET NOCOUNT ON          
+ UPDATE NEOAPI_CancelAllOrderLog SET statusRes = @statusRes, orderNumber1 = @orderNumber1, internalOrderNumber = @internalOrderNumber, orderNumber2 = @orderNumber2, userIdRes=@userIdRes,        
+ messageRes = @messageRes, stat=@stat WHERE clientCode = @clientCode AND userId = @userId       
+ select 1 status          
+SET NOCOUNT OFF 
+
+----------------------------------------
+
+CREATE PROCEDURE proc_saveCancelALLOrderReqLogs (            
+    @clientCode VARCHAR(30),            
+    @userId VARCHAR(30),       
+    @segment VARCHAR(50)      
+        
+)               
+AS            
+BEGIN            
+    SET NOCOUNT ON;            
+                
+    INSERT INTO NEOAPI_CancelAllOrderLog (Tag, clientCode, userId, segment, DateTimeStamp)            
+    VALUES ('CANCEL ALL ORDER', @clientCode, @userId, @segment, GETDATE());                  
+    SET NOCOUNT OFF;            
+END
+
+-----------------------------------------
+
+CREATE TABLE NEO_MATRIX_LIMIT_Logs(
+SrNo INT IDENTITY(1,1),
+Collateral DECIMAL(18,2),
+ExposureMarginPrsnt DECIMAL(18,2),
+MarginScripBasketPrsnt DECIMAL(18,2),
+SpanMarginPrsnt DECIMAL(18,2),
+PremiumPrsnt DECIMAL(18,2),
+MarginUsed DECIMAL(18,2),
+CollateralValue DECIMAL(18,2),
+AdhocMargin DECIMAL(18,2),
+NotionalCash DECIMAL(18,2),
+RmsCollateral DECIMAL(18,2),
+RmsPayInAmt DECIMAL(18,2),
+RmsPayOutAmt DECIMAL(18,2),
+TotalMargin DECIMAL(18,2),
+NetMargin DECIMAL(18,2)
+)
+
+--------
+
+CREATE PROCEDURE SP_InsertNEOMatrixLimitLogs
+    @Collateral DECIMAL(18, 2),
+    @ExposureMarginPrsnt DECIMAL(18, 2),
+    @MarginScripBasketPrsnt DECIMAL(18, 2),
+    @SpanMarginPrsnt DECIMAL(18, 2),
+    @PremiumPrsnt DECIMAL(18, 2),
+    @MarginUsed DECIMAL(18, 2),
+    @CollateralValue DECIMAL(18, 2),
+    @AdhocMargin DECIMAL(18, 2),
+    @NotionalCash DECIMAL(18, 2),
+    @RmsCollateral DECIMAL(18, 2),
+    @RmsPayInAmt DECIMAL(18, 2),
+    @RmsPayOutAmt DECIMAL(18, 2),
+    @TotalMargin DECIMAL(18, 2),
+    @NetMargin DECIMAL(18, 2)
+AS
+BEGIN
+    INSERT INTO NEO_MATRIX_LIMIT_Logs (
+        Collateral,
+        ExposureMarginPrsnt,
+        MarginScripBasketPrsnt,
+        SpanMarginPrsnt,
+        PremiumPrsnt,
+        MarginUsed,
+        CollateralValue,
+        AdhocMargin,
+        NotionalCash,
+        RmsCollateral,
+        RmsPayInAmt,
+        RmsPayOutAmt,
+        TotalMargin,
+        NetMargin
+    ) VALUES (
+        @Collateral,
+        @ExposureMarginPrsnt,
+        @MarginScripBasketPrsnt,
+        @SpanMarginPrsnt,
+        @PremiumPrsnt,
+        @MarginUsed,
+        @CollateralValue,
+        @AdhocMargin,
+        @NotionalCash,
+        @RmsCollateral,
+        @RmsPayInAmt,
+        @RmsPayOutAmt,
+        @TotalMargin,
+        @NetMargin
+    );
+END;
+
+
+
+
+--------------------------------------------------
+
+alter PROCEDURE proc_checkInternalRefNo_NEO(      
+@InternalRefNo VARCHAR(20)  
+  
+)      
+AS      
+SET NOCOUNT ON      
+      
+IF (SELECT top 1 ISNULL(internalOrderNumberRes,'') FROM NEOAPI_PlaceOrderLog (NOLOCK) WHERE internalRefNo = @InternalRefNo)<>''     
+BEGIN      
+ SELECT 1 result      
+END      
+ELSE      
+BEGIN      
+ SELECT 0 result      
+END      
+      
+SET NOCOUNT OFF 
+
+----------------------------------
+
+
+*************************************************************************
+
+CREATE TABLE NEOAPI_ProdTable(
+SrNo INT IDENTITY(1,1),
+isActive INT ,
+prodType varchar(50)
+)
+
+INSERT INTO NEOAPI_ProdTable (isActive,prodType)
+VALUES (1, 'MPOWER')
+
+INSERT INTO NEOAPI_ProdTable (isActive,prodType)
+VALUES (1, 'CUSPA')
+
+-----
+
+CREATE PROCEDURE SP_GetProdType
+AS
+BEGIN
+    SELECT prodType FROM NEOAPI_ProdTable;
+END
+
+*************************************************************************
+
+
+CREATE TABLE NEOAPI_CREDENTIALS(
+SrNo INT IDENTITY(1,1),
+isActive INT ,
+serverType VARCHAR(50),
+userId VARCHAR(50),
+AuthorizationCode VARCHAR(50),
+ConsumerKey VARCHAR(50),
+PlaceOrderURL VARCHAR(200),
+LogInInitURL VARCHAR(200),
+ModifyOrderURL VARCHAR(200),
+CancelOrderURL VARCHAR(200),
+OrderBookURL VARCHAR(200),
+OrderhistoryURL VARCHAR(200),
+MatrixLimitURL VARCHAR(200)
+)
+
+INSERT INTO NEOAPI_CREDENTIALS (isActive, serverType, userId, AuthorizationCode, ConsumerKey, PlaceOrderURL, LogInInitURL, ModifyOrderURL, CancelOrderURL,OrderBookURL,OrderhistoryURL,MatrixLimitURL )
+VALUES (1, 'GDC', 'RISKUSER', '3162937c-7d15-3bb5-8298-8bd4357820aa', 'usgR8k_mfqNOYQSbSshowMLgqT4a', 'https://d-mis.kotaksecurities.com/order/1.0/','https://d-mis.kotaksecurities.com/login/1.0/init','https://d-mis.kotaksecurities.com/order/1.0/','https://d-mis.kotaksecurities.com/order/1.0/','https://d-mis.kotaksecurities.com/report/1.2/order','https://d-mis.kotaksecurities.com/order/1.1/order-history','https://d-mis.kotaksecurities.com/report/1.0/limit')
+
+INSERT INTO NEOAPI_CREDENTIALS (isActive, serverType, userId, AuthorizationCode, ConsumerKey, PlaceOrderURL, LogInInitURL, ModifyOrderURL, CancelOrderURL,OrderBookURL,OrderhistoryURL,MatrixLimitURL)
+VALUES (1, 'GDCD', 'RISKUSER', '3162937c-7d15-3bb5-8298-8bd4357820aa', 'usgR8k_mfqNOYQSbSshowMLgqT4a', 'https://d-mis.kotaksecurities.com/order/1.0/','https://d-mis.kotaksecurities.com/login/1.0/init','https://d-mis.kotaksecurities.com/order/1.0/','https://d-mis.kotaksecurities.com/order/1.0/','https://d-mis.kotaksecurities.com/report/1.2/order','https://d-mis.kotaksecurities.com/order/1.1/order-history', 'https://d-mis.kotaksecurities.com/report/1.0/limit')
+
+INSERT INTO NEOAPI_CREDENTIALS (isActive, serverType, userId, AuthorizationCode, ConsumerKey, PlaceOrderURL, LogInInitURL, ModifyOrderURL, CancelOrderURL,OrderBookURL,OrderhistoryURL,MatrixLimitURL)
+VALUES (1, 'ADC', 'RISKUSER', '3162937c-7d15-3bb5-8298-8bd4357820aa', 'usgR8k_mfqNOYQSbSshowMLgqT4a', 'https://d-cis.kotaksecurities.com/order/1.0/','https://d-cis.kotaksecurities.com/login/1.0/init','https://d-cis.kotaksecurities.com/order/1.0/','https://d-cis.kotaksecurities.com/order/1.0/','https://d-mis.kotaksecurities.com/report/1.2/order','https://d-mis.kotaksecurities.com/order/1.1/order-history', 'https://d-mis.kotaksecurities.com/report/1.0/limit')
+
+
+
+***********************************************************************

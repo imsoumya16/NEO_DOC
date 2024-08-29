@@ -1,0 +1,371 @@
+########################################## NEO ORDER API DB QUARY ########################################################
+
+
+*******************************
+
+CREATE TABLE NEOAPI_CREDENTIALS(
+SrNo INT IDENTITY(1,1),
+isActive INT ,
+serverType VARCHAR(50),
+userId VARCHAR(50),
+AuthorizationCode VARCHAR(50),
+ConsumerKey VARCHAR(50),
+PlaceOrderURL VARCHAR(200),
+LogInInitURL VARCHAR(200),
+ModifyOrderURL VARCHAR(200),
+CancelOrderURL VARCHAR(200)
+
+)
+
+INSERT INTO NEOAPI_CREDENTIALS (isActive, serverType, userId, AuthorizationCode, ConsumerKey, PlaceOrderURL, LogInInitURL, ModifyOrderURL, CancelOrderURL)
+VALUES (1, 'GDC', 'OMNRSK0001', '3162937c-7d15-3bb5-8298-8bd4357820aa', 'usgR8k_mfqNOYQSbSshowMLgqT4a', 'https://mis.kotaksecurities.com/order/1.0/','https://mis.kotaksecurities.com/login/1.0/init','https://mis.kotaksecurities.com/order/1.0/','https://mis.kotaksecurities.com/order/1.0/')
+
+INSERT INTO NEOAPI_CREDENTIALS (isActive, serverType, userId, AuthorizationCode, ConsumerKey, PlaceOrderURL, LogInInitURL, ModifyOrderURL, CancelOrderURL)
+VALUES (1, 'GDCD', 'OMNDRSK002', '3162937c-7d15-3bb5-8298-8bd4357820aa', 'usgR8k_mfqNOYQSbSshowMLgqT4a', 'https://mis.kotaksecurities.com/order/1.0/','https://mis.kotaksecurities.com/login/1.0/init','https://mis.kotaksecurities.com/order/1.0/','https://mis.kotaksecurities.com/order/1.0/')
+
+INSERT INTO NEOAPI_CREDENTIALS (isActive, serverType, userId, AuthorizationCode, ConsumerKey, PlaceOrderURL, LogInInitURL, ModifyOrderURL, CancelOrderURL)
+VALUES (1, 'ADC', 'OMNADC001', '3162937c-7d15-3bb5-8298-8bd4357820aa', 'usgR8k_mfqNOYQSbSshowMLgqT4a', 'https://cis.kotaksecurities.com/order/1.0/','https://cis.kotaksecurities.com/login/1.0/init','https://cis.kotaksecurities.com/order/1.0/','https://cis.kotaksecurities.com/order/1.0/')
+
+------------------------------------------------------------------------------
+
+
+CREATE TABLE NEOAPI_PlaceOrderLog(
+Srno INT IDENTITY(1,1),
+internalRefNo VARCHAR(100),
+serverType VARCHAR(30),
+reqid VARCHAR(50),
+Tag VARCHAR(20),
+clientCode VARCHAR(20),
+userId VARCHAR(30),
+exchangeSegment VARCHAR(10),
+orderDuration VARCHAR(5),
+product VARCHAR(10),
+symbol VARCHAR(50),
+transactionType VARCHAR(1),
+orderTag VARCHAR(10),
+price DECIMAL(18,2),
+triggerPrice DECIMAL(18,2),
+quantity INT,
+disclosedQuantity INT,
+DateTimeStamp DATETIME,
+Platform VARCHAR(10),
+OrderType VARCHAR(10),
+internalOrderNumber VARCHAR(50),
+orderNumber VARCHAR(100),
+statusRes VARCHAR(20),
+internalOrderNumberRes VARCHAR(50),
+orderNumberRes VARCHAR(100),
+userIdRes VARCHAR(30),
+messageRes VARCHAR(MAX)
+)
+
+...........
+
+
+alter PROCEDURE proc_savePlaceOrderLogs (    
+ @internalRefNo VARCHAR(100), 
+ @serverType VARCHAR(25),
+ @reqid VARCHAR(50),  
+    @clientCode VARCHAR(20),      
+    @userId VARCHAR(30),      
+    @exchangeSegment VARCHAR(10),      
+    @orderDuration VARCHAR(5),      
+    @product VARCHAR(10),      
+    @symbol VARCHAR(50),      
+    @transactionType VARCHAR(1),      
+    @orderTag VARCHAR(10),      
+    @price DECIMAL(18,2),      
+    @triggerPrice DECIMAL(18,2),      
+    @quantity INT,      
+    @disclosedQuantity INT  
+  
+)      
+AS      
+BEGIN      
+    SET NOCOUNT ON     
+          
+    INSERT INTO NEOAPI_PlaceOrderLog (Tag, internalRefNo, serverType, reqid, clientCode, userId, exchangeSegment, orderDuration, product, symbol, transactionType, orderTag, price, triggerPrice, quantity, disclosedQuantity, DateTimeStamp)      
+    VALUES ('PLACE ORDER', @internalRefNo, @serverType, @reqid, @clientCode, @userId, @exchangeSegment, @orderDuration, @product, @symbol, @transactionType, @orderTag, @price, @triggerPrice, @quantity, @disclosedQuantity,  GETDATE())  
+      
+    /*SELECT MAX(Srno) AS srno       
+    FROM NEOAPI_PlaceOrderLog WITH (NOLOCK)       
+    WHERE   
+  internalRefNo = @internalRefNo  
+  AND reqid = @reqid  
+  AND clientCode = @clientCode       
+        AND userId = @userId       
+        AND exchangeSegment = @exchangeSegment       
+        AND orderDuration = @orderDuration       
+        AND product = @product       
+        AND symbol = @symbol       
+        AND transactionType = @transactionType       
+        AND orderTag = @orderTag       
+        AND price = @price       
+        AND triggerPrice = @triggerPrice       
+        AND quantity = @quantity       
+        AND disclosedQuantity = @disclosedQuantity  */  
+           
+    SET NOCOUNT OFF     
+END
+
+
+---------------
+
+  
+create PROCEDURE proc_saveAPIRes(    
+@internalRefNo VARCHAR(100),  
+@serverType VARCHAR(30),  
+@reqid VARCHAR(50),    
+@statusRes VARCHAR(20),      
+@internalOrderNumberRes VARCHAR(50),      
+@orderNumberRes VARCHAR(100),      
+@userIdRes VARCHAR(30),      
+@messageRes VARCHAR(MAX)      
+)      
+AS      
+SET NOCOUNT ON      
+ UPDATE NEOAPI_PlaceOrderLog SET statusRes = @statusRes, internalOrderNumberRes = @internalOrderNumberRes,orderNumberRes = @orderNumberRes,userIdRes = @userIdRes,      
+ messageRes = @messageRes WHERE internalRefNo = @internalRefNo AND reqid = @reqid AND serverType=@serverType    
+ select 1 status      
+SET NOCOUNT OFF
+
+--------------
+create table NEO_OrderData(
+Srno INT IDENTITY(1,1),
+InternalRefNo VARCHAR(25),
+serverType varchar(30),
+reqid VARCHAR(20),
+Tag VARCHAR(20),
+isActive INT,
+userId VARCHAR(30),
+clientCode VARCHAR(20),
+exchangeSegment VARCHAR(10),
+symbol VARCHAR(50),
+transactionType VARCHAR(1),
+quantity INT,
+price DECIMAL(18,2),
+product VARCHAR(10),
+orderDuration VARCHAR(5),
+triggerPrice DECIMAL(18,2),
+disclosedQuantity INT,
+orderTag VARCHAR(10),
+appInstallId VARCHAR(20),
+algoId VARCHAR(10),
+internalOrderNumber VARCHAR(50),
+orderNumber VARCHAR(50),
+DateTimeStamp DATETIME
+)
+
+-----------------
+
+insert into NEO_OrderData values('ABCD00001','GDC','00001','PLACED-ORDER','0','BHARATUAT','BHARATUAT123','nse_cm','DABUR-EQ','B',1,0.0,'NRML','DAY',0.0,0,'NEVER','NULL','','','','')
+
+insert into NEO_OrderData values('ABCD00001','GDC','00002','PLACED-ORDER','0','BHARATUAT','BHARATUAT123','nse_cm','DABUR-EQ','B',1,0.0,'NRML','DAY',0.0,0,'NEVER','NULL','','','','')
+
+insert into NEO_OrderData values('ABCD00003','ADC','00001','PLACED-ORDER','0','BHARATUAT','BHARATUAT123','nse_cm','DABUR-EQ','B',1,0.0,'NRML','DAY',0.0,0,'NEVER','NULL','','','','')
+
+insert into NEO_OrderData values('ABCD00002','GDCD','00001','PLACED-ORDER','0','BHARATUAT','BHARATUAT123','nse_cm','DABUR-EQ','B',1,0.0,'NRML','DAY',0.0,0,'NEVER','NULL','','','','')
+
+######################################################################################
+
+CREATE PROCEDURE proc_getCredentialsFromDB    
+AS    
+SET NOCOUNT ON    
+ SELECT * FROM NEOAPI_CREDENTIALS (NOLOCK) WHERE isActive = 1    
+SET NOCOUNT OFF  
+
+------------------------------------
+
+  
+CREATE PROCEDURE proc_checkInternalRefNo_NEO(  
+@InternalRefNo VARCHAR(20)  
+)  
+AS  
+SET NOCOUNT ON  
+  
+IF EXISTS (SELECT internalRefNo FROM NEOAPI_PlaceOrderLog (NOLOCK) WHERE internalRefNo = @InternalRefNo)  
+BEGIN  
+ SELECT 1 result  
+END  
+ELSE  
+BEGIN  
+ SELECT 0 result  
+END  
+  
+SET NOCOUNT OFF
+
+-----------------------------
+
+  
+CREATE PROCEDURE SP_NeoOrderAPI_UpdateIsActiveStatus  
+    @InternalRefNo VARCHAR(50)  
+AS  
+BEGIN  
+    UPDATE NEO_OrderData  
+    SET isActive = 1  
+    WHERE InternalRefNo = @InternalRefNo;  
+END;  
+
+------------------------------
+
+  
+CREATE PROCEDURE SP_neoApiGetData        
+AS  
+BEGIN  
+    SET NOCOUNT ON  
+    SELECT * FROM NEO_OrderData WITH (NOLOCK) where isActive=0;  
+    SET NOCOUNT OFF  
+END;  
+
+-------------------------
+
+
+
+
+
+############################### REQ STRucture #################################
+
+
+{
+    "internalRefNo" : "ABCD00005",
+    "serverType" : "GCD",
+    "data" : [
+        {
+            "reqid": "000011",
+            "userId" : "RISKUSER",
+            "clientCode" : "ABCZ1111",
+            "exchangeSegment" : "nse_fo",
+            "symbol" : "NIFTY24MAYFUT",
+            "transactionType" : "B",
+            "quantity" : 50,
+            "price" : 0.0,
+            "product" : "NRML",
+            "orderDuration" : "DAY",
+            "triggerPrice" : 0.0,
+            "disclosedQuantity" : 0,
+            "orderTag" : "NERU_24_ABCZ1234"
+        }
+
+        {
+            "reqid": "000011",
+            "userId" : "RISKUSER",
+            "clientCode" : "ABCZ1111",
+            "exchangeSegment" : "nse_fo",
+            "symbol" : "NIFTY24MAYFUT",
+            "transactionType" : "B",
+            "quantity" : 50,
+            "price" : 0.0,
+            "product" : "NRML",
+            "orderDuration" : "DAY",
+            "triggerPrice" : 0.0,
+            "disclosedQuantity" : 0,
+            "orderTag" : "NERU_24_ABCZ1234"
+        }
+  
+    ]
+}
+
+######################################################################################
+
+
+
+*************************************************************modify & delete ************************************************
+
+  
+CREATE PROCEDURE proc_saveModifyOrderLogs (      
+    @clientCode VARCHAR(20),      
+    @internalOrderNumber VARCHAR(50),      
+    @orderDuration VARCHAR(5),      
+    @orderType VARCHAR(10),      
+    @price DECIMAL(18,2),      
+    @triggerPrice DECIMAL(18,2),      
+    @quantity INT,      
+    @disclosedQuantity INT,      
+    @userId VARCHAR(30),      
+    @platform VARCHAR(10),      
+    @orderNumber VARCHAR(20),    
+     
+ @statusRes VARCHAR(20),    
+    @internalOrderNumberRes VARCHAR(50),    
+ @orderNumberRes VARCHAR(100),    
+ @userIdRes VARCHAR(30),    
+ @messageRes VARCHAR(MAX)    
+    
+     
+)      
+AS      
+BEGIN      
+    SET NOCOUNT ON;      
+          
+    INSERT INTO NEOAPI_PlaceOrderLog (Tag, clientCode, internalOrderNumber, orderDuration, orderType, price, triggerPrice, quantity, disclosedQuantity, userId, platform, orderNumber, statusRes, internalOrderNumberRes, orderNumberRes, userIdRes, messageRes, DateTimeStamp)      
+    VALUES ('MODIFY ORDER', @clientCode, @internalOrderNumber, @orderDuration, @orderType, @price, @triggerPrice, @quantity, @disclosedQuantity, @userId, @platform, @orderNumber, @statusRes,@internalOrderNumberRes,@orderNumberRes,@userIdRes,@messageRes, GETDATE());      
+      
+    SELECT MAX(Srno) AS srno       
+    FROM NEOAPI_PlaceOrderLog WITH (NOLOCK)       
+    WHERE Tag = 'MODIFY ORDER'      
+        AND clientCode = @clientCode       
+        AND internalOrderNumber = @internalOrderNumber       
+        AND orderDuration = @orderDuration       
+        AND orderType = @orderType       
+        AND price = @price       
+        AND triggerPrice = @triggerPrice       
+        AND quantity = @quantity       
+        AND disclosedQuantity = @disclosedQuantity       
+        AND userId = @userId       
+        AND platform = @platform       
+        AND orderNumber = @orderNumber    
+      
+  AND statusRes = @statusRes       
+        AND internalOrderNumberRes = @internalOrderNumberRes    
+  AND orderNumberRes = @orderNumberRes    
+        AND userIdRes = @userIdRes    
+        AND messageRes = @messageRes;    
+  ;      
+              
+    SET NOCOUNT OFF;      
+END;
+
+------------------------------------------------------
+
+
+  
+CREATE PROCEDURE proc_saveCancelOrderLogs (      
+    @clientCode VARCHAR(20),      
+    @userId VARCHAR(30),      
+    @internalOrderNumber VARCHAR(50),      
+    @orderNumber VARCHAR(20),      
+ @statusRes Varchar(20),    
+ @orderNumberRes varchar(100),    
+ @internalOrderNumberRes varchar(100),    
+ @userIdRes varchar(50),    
+ @messageRes varchar(MAX)    
+)      
+AS      
+BEGIN      
+    SET NOCOUNT ON;      
+          
+    INSERT INTO NEOAPI_PlaceOrderLog (Tag, clientCode, userId, internalOrderNumber, orderNumber, statusRes, orderNumberRes, internalOrderNumberRes, userIdRes, messageRes, DateTimeStamp)      
+    VALUES ('CANCEL ORDER', @clientCode, @userId, @internalOrderNumber, @orderNumber, @statusRes, @orderNumberRes, @internalOrderNumberRes, @userIdRes, @messageRes, GETDATE());      
+      
+    SELECT MAX(Srno) AS srno       
+    FROM NEOAPI_PlaceOrderLog WITH (NOLOCK)       
+    WHERE Tag = 'DELETE ORDER'      
+        AND clientCode = @clientCode       
+        AND userId = @userId       
+        AND internalOrderNumber = @internalOrderNumber       
+        AND orderNumber = @orderNumber    
+  AND statusRes = @statusRes     
+  AND orderNumberRes = @orderNumberRes     
+  AND internalOrderNumberRes = @internalOrderNumberRes       
+  AND userIdRes = @userIdRes     
+  AND messageRes = @messageRes    
+              
+            
+              
+    SET NOCOUNT OFF;      
+END; 
+
+
+
+
+
